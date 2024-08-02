@@ -35,7 +35,7 @@ async function filterByObject(object) {
 
 async function loadJSON() {
     try {
-        const response = await fetch('response.json');
+        const response = await fetch('./assets/response.json');
         if (!response.ok) {
             throw new Error('Erro ao carregar o JSON');
         }
