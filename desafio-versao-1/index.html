@@ -1,22 +1,45 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Heatmap Noleak Defense</title>
-    <link rel="icon" href="../assets/noleak_cybersecurity_logo.jpg" type="image/x-icon">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>1 Heatmap Noleak Defense</title>
+    <link
+      rel="icon"
+      href="../assets/noleak_cybersecurity_logo.jpg"
+      type="image/x-icon"
+    />
     <script src="../js/heatmap.min.js"></script>
     <style>
-        .heatmap {
-            width: 704px;
-            height: 480px;
-            border: 1px solid black;
-            background-image: url("../assets/image-overlay.png");
-        }
+      #container {
+        display: flex;
+        align-items: flex-start;
+      }
+      .heatmap {
+        width: 704px;
+        height: 480px;
+        border: 1px solid black;
+        background-image: url("../assets/image-overlay.png");
+      }
+      #controls {
+        margin-left: 20px;
+      }
     </style>
-</head>
-<body>
-    <div class="heatmap"></div>
+  </head>
+  <body>
+    <div id="container">
+      <div class="heatmap"></div>
+      <div id="controls">
+        <select id="objectSelect">
+          <option value="">Selecione o objeto</option>
+        </select>
+        <button id="plotButton">Plot</button>
+        <button id="downloadButton" style="margin-top: 1rem">
+          Download Imagem
+        </button>
+      </div>
+    </div>
+
     <script src="script.js"></script>
-</body>
+  </body>
 </html>
