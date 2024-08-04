@@ -1,14 +1,15 @@
 var data = null;
 var filteredDeepstreamMsgs = null;
-const objectToFilter = "chair";
+const objectToFilter = "";
+const foundObjects = new Set();
+let allPoints = [];
+let heatmapInstance = null;
 
 function calculateCentroid(xMin, yMin, xMax, yMax) {
     const centroidX = (xMin + xMax) / 2;
     const centroidY = (yMin + yMax) / 2;
     return { x: centroidX, y: centroidY };
 }
-const foundObjects = new Set();
-
 
 async function filterByObject(object) {
     const data = await loadJSON();
@@ -23,7 +24,6 @@ async function filterByObject(object) {
     });
 }
 
-
 async function loadJSON() {
     const response = await fetch('../assets/response.json');
     if (!response.ok) {
@@ -33,22 +33,45 @@ async function loadJSON() {
     return await response.json();
 }
 
-filterByObject(objectToFilter).then(filteredMessages => {
+(async function loadAndRenderData() {
+    const data = await loadJSON();
 
-    if (!filteredMessages) {
-        throw new Error('Erro ao filtrar as mensagens. Possívelmente o objeto não foi encontrado');
+    allPoints = data.hits.hits.flatMap((msg) => {
+        return msg.fields["deepstream-msg"].map((deepstreamMsg) => {
+            const [trackingId, xMin, yMin, xMax, yMax, deepstreamObject] = deepstreamMsg.split('|');
+            foundObjects.add(deepstreamObject);
+            return {
+                x: (parseFloat(xMin) + parseFloat(xMax)) / 2,
+                y: (parseFloat(yMin) + parseFloat(yMax)) / 2,
+                object: deepstreamObject,
+            };
+        });
+    });
+
+    updateObjectList();
+})()
+
+function updateObjectList() {
+    const objectSelect = document.getElementById("objectSelect");
+    foundObjects.forEach((object) => {
+        const option = document.createElement("option");
+        option.value = object;
+        option.textContent = object;
+        objectSelect.appendChild(option);
+    });
+}
+
+
+function plotPoints(object) {
+    const points = allPoints.filter((point) => point.object === object);
+
+    if (!heatmapInstance) {
+        heatmapInstance = h337.create({
+            container: document.querySelector('.heatmap')
+        });
     }
 
-    const points = filteredMessages.map(msg => {
-        const [trackingId, xMin, yMin, xMax, yMax] = msg.split('|');
-        return calculateCentroid(parseFloat(xMin), parseFloat(yMin), parseFloat(xMax), parseFloat(yMax));
-    });
-
-    console.log(foundObjects)
-
-    const heatmapInstance = h337.create({
-        container: document.querySelector('.heatmap')
-    });
+    heatmapInstance.setData({ max: 10, data: [] });
 
     const heatmapData = {
         max: 10,
@@ -60,4 +83,9 @@ filterByObject(objectToFilter).then(filteredMessages => {
     };
 
     heatmapInstance.setData(heatmapData);
+}
+
+document.getElementById("plotButton").addEventListener("click", () => {
+    const selectedObject = document.getElementById("objectSelect").value;
+    plotPoints(selectedObject);
 });
