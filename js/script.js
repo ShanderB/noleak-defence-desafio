@@ -14,20 +14,15 @@ async function filterByObject(object) {
     const data = await loadJSON();
 
 
-    if (data && data.hits && data.hits.hits) {
-        return data.hits.hits.flatMap(msg => {
-            return msg.fields["deepstream-msg"].filter(deepstreamMsg => {
-                const [trackingId, xMin, yMin, xMax, yMax, deepstreamObject] = deepstreamMsg.split('|');
-                foundObjects.add(deepstreamObject);
+    return data.hits.hits.flatMap(msg => {
+        return msg.fields["deepstream-msg"].filter(deepstreamMsg => {
+            const [trackingId, xMin, yMin, xMax, yMax, deepstreamObject] = deepstreamMsg.split('|');
+            foundObjects.add(deepstreamObject);
 
-                return deepstreamObject === object;
-            });
-            return [];
+            return deepstreamObject === object;
         });
-    } else {
-        console.error('Dados inválidos ou ausentes');
         return [];
-    }
+    });
 }
 
 
@@ -45,6 +40,11 @@ async function loadJSON() {
 }
 
 filterByObject(objectToFilter).then(filteredMessages => {
+
+    if(!filteredMessages){
+        throw new Error('Erro ao filtrar as mensagens. Possívelmente o objeto não foi encontrado');
+    }
+    
     const points = filteredMessages.map(msg => {
         const [trackingId, xMin, yMin, xMax, yMax] = msg.split('|');
         return calculateCentroid(parseFloat(xMin), parseFloat(yMin), parseFloat(xMax), parseFloat(yMax));
