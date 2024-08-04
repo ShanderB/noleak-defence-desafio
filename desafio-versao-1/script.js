@@ -61,7 +61,6 @@ function updateObjectList() {
     });
 }
 
-
 function plotPoints(object) {
     const points = allPoints.filter((point) => point.object === object);
 
@@ -85,7 +84,16 @@ function plotPoints(object) {
     heatmapInstance.setData(heatmapData);
 }
 
-document.getElementById("plotButton").addEventListener("click", () => {
+document.getElementById("objectSelect").addEventListener("change", () => {
     const selectedObject = document.getElementById("objectSelect").value;
     plotPoints(selectedObject);
+});
+
+document.getElementById("downloadButton").addEventListener("click", () => {
+    const canvas = document.querySelector('.heatmap canvas');
+    const link = document.createElement('a');
+    link.download = 'heatmap.png';
+    link.href = canvas.toDataURL();
+    link.click();
+
 });

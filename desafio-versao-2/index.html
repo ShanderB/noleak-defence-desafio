@@ -25,15 +25,19 @@
   </head>
   <body>
     <h1>Desafio 2</h1>
-    <div style="margin-bottom: 20px;">Fiz esse teste usando canvas para validar se o dado existia na tela. Funciona perfeitamente usando apenas o canvas.</div>
+    <div style="margin-bottom: 20px">
+      Fiz esse teste usando canvas para validar se o dado existia na tela.
+      Funciona perfeitamente usando apenas o canvas.
+    </div>
     <div id="container">
       <canvas id="canvas" width="704" height="480"></canvas>
       <div id="controls">
         <select id="objectSelect">
           <option value="">Selecione o objeto</option>
         </select>
-        <button id="plotButton">Plot</button>
-        <button id="downloadButton" style="margin-top: 1rem;">Download Imagem</button>
+        <button id="downloadButton" style="margin-top: 1rem">
+          Download Imagem
+        </button>
       </div>
     </div>
     <script>
@@ -99,7 +103,7 @@
         });
       }
 
-      document.getElementById("plotButton").addEventListener("click", () => {
+      document.getElementById("objectSelect").addEventListener("change", () => {
         const selectedObject = document.getElementById("objectSelect").value;
         plotPoints(selectedObject);
       });
