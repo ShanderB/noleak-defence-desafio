@@ -13,7 +13,6 @@ const foundObjects = new Set();
 async function filterByObject(object) {
     const data = await loadJSON();
 
-
     return data.hits.hits.flatMap(msg => {
         return msg.fields["deepstream-msg"].filter(deepstreamMsg => {
             const [trackingId, xMin, yMin, xMax, yMax, deepstreamObject] = deepstreamMsg.split('|');
@@ -26,16 +25,12 @@ async function filterByObject(object) {
 
 
 async function loadJSON() {
-    try {
-        const response = await fetch('./assets/response.json');
-        if (!response.ok) {
-            throw new Error('Erro ao carregar o JSON');
-        }
-        const data = await response.json();
-        return data;
-    } catch (error) {
-        return null;
+    const response = await fetch('../assets/response.json');
+    if (!response.ok) {
+        throw new Error('Erro ao carregar o JSON');
     }
+
+    return await response.json();
 }
 
 filterByObject(objectToFilter).then(filteredMessages => {
