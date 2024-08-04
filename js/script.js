@@ -16,14 +16,12 @@ async function filterByObject(object) {
 
     if (data && data.hits && data.hits.hits) {
         return data.hits.hits.flatMap(msg => {
-            if (msg.fields && msg.fields["deepstream-msg"]) {
-                return msg.fields["deepstream-msg"].filter(deepstreamMsg => {
-                    const [trackingId, xMin, yMin, xMax, yMax, deepstreamObject] = deepstreamMsg.split('|');
-                    foundObjects.add(deepstreamObject);
+            return msg.fields["deepstream-msg"].filter(deepstreamMsg => {
+                const [trackingId, xMin, yMin, xMax, yMax, deepstreamObject] = deepstreamMsg.split('|');
+                foundObjects.add(deepstreamObject);
 
-                    return deepstreamObject === object;
-                });
-            }
+                return deepstreamObject === object;
+            });
             return [];
         });
     } else {
