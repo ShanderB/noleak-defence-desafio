@@ -21,7 +21,6 @@ async function filterByObject(object) {
 
             return deepstreamObject === object;
         });
-        return [];
     });
 }
 
@@ -41,10 +40,10 @@ async function loadJSON() {
 
 filterByObject(objectToFilter).then(filteredMessages => {
 
-    if(!filteredMessages){
+    if (!filteredMessages) {
         throw new Error('Erro ao filtrar as mensagens. Possívelmente o objeto não foi encontrado');
     }
-    
+
     const points = filteredMessages.map(msg => {
         const [trackingId, xMin, yMin, xMax, yMax] = msg.split('|');
         return calculateCentroid(parseFloat(xMin), parseFloat(yMin), parseFloat(xMax), parseFloat(yMax));
