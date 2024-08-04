@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      rel="icon"
+      href="../assets/noleak_cybersecurity_logo.jpg"
+      type="image/x-icon"
+    />
+    <title>2 Heatmap Noleak Defense</title>
+    <style>
+      #container {
+        display: flex;
+        align-items: flex-start;
+      }
+      #canvas {
+        background-image: url("../assets/image-overlay.png");
+        border: 1px solid black;
+      }
+      #controls {
+        margin-left: 20px;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="container">
+      <canvas id="canvas" width="704" height="480"></canvas>
+      <div id="controls">
+        <select id="objectSelect">
+          <option value="">Select object</option>
+        </select>
+        <button id="plotButton">Plot</button>
+        <button id="downloadButton" style="margin-top: 1rem;">Download Image</button>
+      </div>
+    </div>
+    <script>
+      let allPoints = [];
+      let foundObjects = new Set();
+
+      async function loadAndRenderData() {
+        try {
+          const response = await fetch("../assets/response.json");
+          const data = await response.json();
+
+          const canvas = document.getElementById("canvas");
+          const ctx = canvas.getContext("2d");
+
+          allPoints = data.hits.hits.flatMap((msg) => {
+            return msg.fields["deepstream-msg"].map((deepstreamMsg) => {
+              const [trackingId, xMin, yMin, xMax, yMax, deepstreamObject] =
+                deepstreamMsg.split("|");
+              foundObjects.add(deepstreamObject);
+              return {
+                x: (parseFloat(xMin) + parseFloat(xMax)) / 2,
+                y: (parseFloat(yMin) + parseFloat(yMax)) / 2,
+                object: deepstreamObject,
+              };
+            });
+          });
+
+          updateObjectList();
+        } catch (error) {
+          console.error("Erro ao carregar o arquivo JSON:", error);
+        }
+      }
+
+      function updateObjectList() {
+        const objectSelect = document.getElementById("objectSelect");
+        foundObjects.forEach((object) => {
+          const option = document.createElement("option");
+          option.value = object;
+          option.textContent = object;
+          objectSelect.appendChild(option);
+        });
+      }
+
+      function plotPoints(object) {
+        const canvas = document.getElementById("canvas");
+        const ctx = canvas.getContext("2d");
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+        const points = allPoints.filter((point) => point.object === object);
+
+        points.forEach((point) => {
+          ctx.fillStyle = "blue";
+          ctx.beginPath();
+          ctx.arc(point.x, point.y, 2, 0, Math.PI * 2);
+          ctx.fill();
+        });
+
+        points.forEach((point) => {
+          ctx.fillStyle = "red";
+          ctx.beginPath();
+          ctx.arc(point.x, point.y, 12, 0, Math.PI * 2);
+          ctx.fill();
+        });
+      }
+
+      document.getElementById("plotButton").addEventListener("click", () => {
+        const selectedObject = document.getElementById("objectSelect").value;
+        plotPoints(selectedObject);
+      });
+
+      document
+        .getElementById("downloadButton")
+        .addEventListener("click", () => {
+          const canvas = document.getElementById("canvas");
+          const link = document.createElement("a");
+          link.download = "heatmap.png";
+          link.href = canvas.toDataURL();
+          link.click();
+        });
+
+      loadAndRenderData();
+    </script>
+  </body>
+</html>
