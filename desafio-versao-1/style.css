@@ -1,0 +1,24 @@
+#container {
+    display: flex;
+    align-items: flex-start;
+    width: 704px;
+    height: 480px;
+}
+
+.heatmap {
+    width: 704px;
+    height: 480px;
+    border: 1px solid black;
+    background-image: url("../assets/image-overlay.png");
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+.description {
+    margin-bottom: 20px;
+}
+
+.buttons {
+    margin-top: 20px;
+}
