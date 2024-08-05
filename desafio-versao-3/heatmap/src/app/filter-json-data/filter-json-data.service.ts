@@ -14,7 +14,7 @@ export class FilterJsonDataService {
     private readonly calculateCentroideService: CalculateCentroideService
   ) {}
 
-  filterJson(data: DeepstreamMsg): any[] {
+  filterJson(data: DeepstreamMsg): { object: string; x: number; y: number; }[] {
     return data.hits.hits.flatMap((msg) => {
       return msg.fields['deepstream-msg'].map((deepstreamMsg: string) => {
         const [trackingId, xMin, yMin, xMax, yMax, deepstreamObject] =
