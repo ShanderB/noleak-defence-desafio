@@ -1,5 +1,11 @@
 {
+  "name": "desafio-versao-3",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "start": "ng serve"
+  },
   "dependencies": {
-    "@angular/cli": "^18.1.3"
+    "@angular/cli": "^17.3.8"
   }
 }
