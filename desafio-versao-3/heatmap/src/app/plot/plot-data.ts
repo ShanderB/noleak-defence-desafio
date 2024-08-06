@@ -9,6 +9,18 @@ import { DataItem } from '../interfaces/data-item';
 export class PlotDataService {
   constructor(@Inject(DOCUMENT) private document: Document) {}
 
+  private gaussian(x: number, y: number, sigma: number): number {
+    return Math.exp(-(x * x + y * y) / (2 * sigma * sigma)) / (2 * Math.PI * sigma * sigma);
+  }
+
+  private interpolateColor(value: number): [number, number, number, number] {
+    const r = Math.min(255, Math.max(0, 255 * (value - 0.5) * 2));
+    const g = Math.min(255, Math.max(0, 255 * (1 - Math.abs(value - 0.5) * 2)));
+    const b = Math.min(255, Math.max(0, 255 * (0.5 - value) * 2));
+    const a = value > 0.01 ? Math.min(255, Math.max(150, value * 255)) : 0;
+    return [r, g, b, a];
+  }
+
   plotData(filteredData: GroupedData, selectedObject: string) {
     const points = filteredData[selectedObject!];
 
@@ -16,20 +28,45 @@ export class PlotDataService {
       'heatmap-container'
     ) as HTMLCanvasElement;
     const ctx = canvas.getContext('2d')!;
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    const largura = canvas.width;
+    const altura = canvas.height;
+    const sigma = 10;
 
-    points.forEach((point: Pick<DataItem, "x" | "y">) => {
-      ctx.fillStyle = 'blue';
-      ctx.beginPath();
-      ctx.arc(point.x, point.y, 2, 0, Math.PI * 2);
-      ctx.fill();
-    });
+    ctx.clearRect(0, 0, largura, altura);
 
-    points.forEach((point: Pick<DataItem, "x" | "y">) => {
-      ctx.fillStyle = 'red';
-      ctx.beginPath();
-      ctx.arc(point.x, point.y, 12, 0, Math.PI * 2);
-      ctx.fill();
-    });
+    const imgData = ctx.createImageData(largura, altura);
+
+    let maxDensity = 0;
+    const densityMap = new Array(altura)
+      .fill(0)
+      .map(() => new Array(largura).fill(0));
+
+    for (let y = 0; y < altura; y++) {
+      for (let x = 0; x < largura; x++) {
+        let densidade = 0;
+        points.forEach((point) => {
+          densidade += this.gaussian(x - point.x, y - point.y, sigma);
+        });
+        densityMap[y][x] = densidade;
+        if (densidade > maxDensity) {
+          maxDensity = densidade;
+        }
+      }
+    }
+
+    for (let y = 0; y < altura; y++) {
+      for (let x = 0; x < largura; x++) {
+        const densidade = densityMap[y][x];
+        const normalizedDensity = densidade / maxDensity;
+        const [r, g, b, a] = this.interpolateColor(normalizedDensity);
+        const index = (y * largura + x) * 4;
+        imgData.data[index] = r; // R
+        imgData.data[index + 1] = g; // G
+        imgData.data[index + 2] = b; // B
+        imgData.data[index + 3] = a; // A
+      }
+    }
+
+    ctx.putImageData(imgData, 0, 0);
   }
 }
