@@ -1,6 +1,7 @@
 import { Injectable, Inject } from '@angular/core';
 import { DOCUMENT } from '@angular/common';
 import { GroupedData } from '../interfaces/grouped-data';
+import { DataItem } from '../interfaces/data-item';
 
 @Injectable({
   providedIn: 'root',
@@ -17,14 +18,14 @@ export class PlotDataService {
     const ctx = canvas.getContext('2d')!;
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-    points.forEach((point: any) => {
+    points.forEach((point: Pick<DataItem, "x" | "y">) => {
       ctx.fillStyle = 'blue';
       ctx.beginPath();
       ctx.arc(point.x, point.y, 2, 0, Math.PI * 2);
       ctx.fill();
     });
 
-    points.forEach((point: any) => {
+    points.forEach((point: Pick<DataItem, "x" | "y">) => {
       ctx.fillStyle = 'red';
       ctx.beginPath();
       ctx.arc(point.x, point.y, 12, 0, Math.PI * 2);
