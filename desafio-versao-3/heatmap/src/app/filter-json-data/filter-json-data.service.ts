@@ -1,9 +1,8 @@
 import { Injectable } from '@angular/core';
 import { CalculateCentroideService } from '../centroide/centroide';
-
-interface DeepstreamMsg {
-  hits: { hits: [{ fields: { 'deepstream-msg': string[] } }] };
-}
+import { DeepstreamMsg } from '../interfaces/deep-stream-msg';
+import { DataItem } from '../interfaces/data-item';
+import { GroupedData } from '../interfaces/grouped-data';
 
 @Injectable({
   providedIn: 'root',
@@ -14,7 +13,7 @@ export class FilterJsonDataService {
     private readonly calculateCentroideService: CalculateCentroideService
   ) {}
 
-  filterJson(data: DeepstreamMsg): { object: string; x: number; y: number; }[] {
+  filterJson(data: DeepstreamMsg): DataItem[] {
     return data.hits.hits.flatMap((msg) => {
       return msg.fields['deepstream-msg'].map((deepstreamMsg: string) => {
         const [trackingId, xMin, yMin, xMax, yMax, deepstreamObject] =
@@ -32,5 +31,15 @@ export class FilterJsonDataService {
         };
       });
     });
+  }
+
+  reduceData(data: DataItem[]): GroupedData {
+    return data.reduce((acc: GroupedData, item: DataItem) => {
+      if (!acc[item.object]) {
+        acc[item.object] = [];
+      }
+      acc[item.object].push({ x: item.x, y: item.y });
+      return acc;
+    }, {});
   }
 }
