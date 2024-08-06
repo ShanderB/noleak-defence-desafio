@@ -10,7 +10,10 @@ export class PlotDataService {
   constructor(@Inject(DOCUMENT) private document: Document) {}
 
   private gaussian(x: number, y: number, sigma: number): number {
-    return Math.exp(-(x * x + y * y) / (2 * sigma * sigma)) / (2 * Math.PI * sigma * sigma);
+    return (
+      Math.exp(-(x * x + y * y) / (2 * sigma * sigma)) /
+      (2 * Math.PI * sigma * sigma)
+    );
   }
 
   private interpolateColor(value: number): [number, number, number, number] {
@@ -35,6 +38,7 @@ export class PlotDataService {
     ctx.clearRect(0, 0, largura, altura);
 
     const imgData = ctx.createImageData(largura, altura);
+    const data = new Uint8ClampedArray(imgData.data.buffer);
 
     let maxDensity = 0;
     const densityMap = new Array(altura)
@@ -60,10 +64,10 @@ export class PlotDataService {
         const normalizedDensity = densidade / maxDensity;
         const [r, g, b, a] = this.interpolateColor(normalizedDensity);
         const index = (y * largura + x) * 4;
-        imgData.data[index] = r; // R
-        imgData.data[index + 1] = g; // G
-        imgData.data[index + 2] = b; // B
-        imgData.data[index + 3] = a; // A
+        data[index] = r; // R
+        data[index + 1] = g; // G
+        data[index + 2] = b; // B
+        data[index + 3] = a; // A
       }
     }
 
