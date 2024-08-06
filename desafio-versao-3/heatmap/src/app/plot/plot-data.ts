@@ -1,5 +1,6 @@
 import { Injectable, Inject } from '@angular/core';
 import { DOCUMENT } from '@angular/common';
+import { GroupedData } from '../interfaces/grouped-data';
 
 @Injectable({
   providedIn: 'root',
@@ -7,7 +8,7 @@ import { DOCUMENT } from '@angular/common';
 export class PlotDataService {
   constructor(@Inject(DOCUMENT) private document: Document) {}
 
-  plotData(filteredData: any, selectedObject: string) {
+  plotData(filteredData: GroupedData, selectedObject: string) {
     const points = filteredData[selectedObject!];
 
     const canvas = this.document.getElementById(
