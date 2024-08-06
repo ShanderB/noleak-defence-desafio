@@ -16,7 +16,7 @@ export class PlotDataService {
   private interpolateColor(value: number): [number, number, number, number] {
     const r = Math.min(255, Math.max(0, 255 * (value - 0.5) * 2));
     const g = Math.min(255, Math.max(0, 255 * (1 - Math.abs(value - 0.5) * 2)));
-    const b = Math.min(255, Math.max(0, 255 * (0.5 - value) * 2));
+    const b = Math.min(255, Math.max(0, 255 * (0.5 - value) * 1.5));
     const a = value > 0.01 ? Math.min(255, Math.max(150, value * 255)) : 0;
     return [r, g, b, a];
   }
@@ -30,7 +30,7 @@ export class PlotDataService {
     const ctx = canvas.getContext('2d')!;
     const largura = canvas.width;
     const altura = canvas.height;
-    const sigma = 10;
+    const sigma = 8;
 
     ctx.clearRect(0, 0, largura, altura);
 
