@@ -11,3 +11,7 @@
     background-image: url('../assets/image-overlay.png');
   "
 ></canvas>
+
+<select (change)="onObjectSelect($event)">
+  <option *ngFor="let object of allObjects" [value]="object">{{ object }}</option>
+</select>
