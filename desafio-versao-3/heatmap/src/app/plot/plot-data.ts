@@ -14,7 +14,7 @@ export class PlotDataService {
   }
 
   private interpolateColor(value: number): [number, number, number, number] {
-    const r = Math.min(255, Math.max(0, 255 * (value - 0.5) * 2));
+    const r = Math.min(255, Math.max(0, 255 * (value - 0.5) * 1231));
     const g = Math.min(255, Math.max(0, 255 * (1 - Math.abs(value - 0.5) * 2)));
     const b = Math.min(255, Math.max(0, 255 * (0.5 - value) * 1.5));
     const a = value > 0.01 ? Math.min(255, Math.max(150, value * 255)) : 0;
