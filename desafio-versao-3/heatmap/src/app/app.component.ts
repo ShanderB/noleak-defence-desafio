@@ -1,9 +1,13 @@
-import { Component } from '@angular/core';
+import { Component, Inject } from '@angular/core';
 import { LoadJsonService } from './load-json/load-json.service';
 import { HttpClientModule } from '@angular/common/http';
 import { FilterJsonDataService } from './filter-json-data/filter-json-data.service';
 import { CalculateCentroideService } from './centroide/centroide';
 import { CommonModule } from '@angular/common';
+import { DOCUMENT } from '@angular/common';
+import { GroupedData } from './interfaces/grouped-data';
+import { DataItem } from './interfaces/data-item';
+import { PlotDataService } from './plot/plot-data';
 
 @Component({
   selector: 'app-root',
@@ -17,11 +21,16 @@ import { CommonModule } from '@angular/common';
   templateUrl: './app.component.html',
 })
 export class AppComponent {
-  data: { object: string; x: number; y: number; }[] = [];
+  data: DataItem[] = [];
+  filteredData: GroupedData = {};
+  allObjects: string[] = [];
+  selectedObject: string | null = null;
 
   constructor(
     private readonly loadJsonService: LoadJsonService,
-    private readonly filterJsonDataService: FilterJsonDataService
+    private readonly filterJsonDataService: FilterJsonDataService,
+    private readonly plotDataService: PlotDataService,
+    @Inject(DOCUMENT) private document: Document
   ) {}
 
   ngOnInit() {
@@ -29,8 +38,21 @@ export class AppComponent {
       .fetchJson('assets/response.json')
       .subscribe((response) => {
         this.data = this.filterJsonDataService.filterJson(response);
+        this.filteredData = this.filterJsonDataService.reduceData(this.data);
+        this.allObjects = Object.keys(this.filteredData);
 
-        console.log(this.data);
+        if (this.allObjects.length > 0) {
+          this.selectedObject = this.allObjects[0];
+          this.plotDataService.plotData(this.filteredData, this.selectedObject);
+        }
       });
   }
+
+  onObjectSelect(event: Event) {
+    const selectElement = event.target as HTMLSelectElement;
+    this.selectedObject = selectElement.value;
+    this.plotDataService.plotData(this.filteredData, this.selectedObject);
+  }
+
+  
 }
