@@ -1,9 +1,8 @@
-<canvas
-  id="heatmap-container"
-  width="704"
-  height="480"
-></canvas>
-
-<select (change)="onObjectSelect($event)">
-  <option *ngFor="let object of allObjects" [value]="object">{{ object }}</option>
-</select>
+<span class="flex-box">
+  <canvas id="heatmap-container" width="704" height="480"></canvas>
+  <select class="mt-1" (change)="onObjectSelect($event)">
+    <option *ngFor="let object of allObjects" [value]="object">
+      {{ object }}
+    </option>
+  </select>
+</span>
