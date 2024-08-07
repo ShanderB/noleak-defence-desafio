@@ -1,10 +1,9 @@
-import { Component, Inject } from '@angular/core';
+import { Component } from '@angular/core';
 import { LoadJsonService } from './load-json/load-json.service';
 import { HttpClientModule } from '@angular/common/http';
 import { FilterJsonDataService } from './filter-json-data/filter-json-data.service';
 import { CalculateCentroideService } from './centroide/centroide';
 import { CommonModule } from '@angular/common';
-import { DOCUMENT } from '@angular/common';
 import { GroupedData } from './interfaces/grouped-data';
 import { DataItem } from './interfaces/data-item';
 import { PlotDataService } from './plot/plot-data';
@@ -30,8 +29,7 @@ export class AppComponent {
   constructor(
     private readonly loadJsonService: LoadJsonService,
     private readonly filterJsonDataService: FilterJsonDataService,
-    private readonly plotDataService: PlotDataService,
-    @Inject(DOCUMENT) private document: Document
+    private readonly plotDataService: PlotDataService
   ) {}
 
   ngOnInit() {

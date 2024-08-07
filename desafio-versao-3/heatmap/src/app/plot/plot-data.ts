@@ -1,7 +1,6 @@
 import { Injectable, Inject } from '@angular/core';
 import { DOCUMENT } from '@angular/common';
 import { GroupedData } from '../interfaces/grouped-data';
-import { DataItem } from '../interfaces/data-item';
 
 @Injectable({
   providedIn: 'root',
