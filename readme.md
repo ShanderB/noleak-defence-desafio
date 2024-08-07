@@ -12,11 +12,11 @@ Para executar o ``desafio-versao-1`` e ``desafio-versao-2``, você deve rodar o 
 
 
 ### desafio-3 (principal)
-Tenha o Node instalado (versão usada nos testes é a 20.16.0);<br>
-Navegue para o path ``cd desafio-versao-3/heatmap``;<br>
-Digite ``npm i && npm start``;<br>
-Rode o projeto no caminho indicado (por padrão é o ``localhost:4200/``).<br>
+1. Tenha o Node instalado (versão usada nos testes é a 20.16.0);<br>
+2. Navegue para o path ``cd desafio-versao-3/heatmap``;<br>
+3. Digite ``npm i && npm start``;<br>
+4. Rode o projeto no caminho indicado (por padrão é o ``localhost:4200/``).<br>
 
 ### Utilização
-Ao iniciar, será selecionado o plot ``person`` como padrão. Mude conforme queira;<br>
-Caso queira fazer o download, clique no botão ``Download da Imagem``.
+* Ao iniciar, será selecionado o plot ``person`` como padrão. Mude conforme queira;<br>
+* Caso queira fazer o download, clique no botão ``Download da Imagem``.
