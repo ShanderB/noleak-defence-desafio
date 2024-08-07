@@ -1,0 +1,4 @@
+#heatmap-container {
+    border: 1px solid black;
+    background-image: url('../assets/image-overlay.png');
+}

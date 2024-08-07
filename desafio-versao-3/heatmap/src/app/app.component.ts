@@ -19,6 +19,7 @@ import { PlotDataService } from './plot/plot-data';
     CalculateCentroideService,
   ],
   templateUrl: './app.component.html',
+  styleUrls: ['./app.component.css'],
 })
 export class AppComponent {
   data: DataItem[] = [];
@@ -53,6 +54,4 @@ export class AppComponent {
     this.selectedObject = selectElement.value;
     this.plotDataService.plotData(this.filteredData, this.selectedObject);
   }
-
-  
 }
