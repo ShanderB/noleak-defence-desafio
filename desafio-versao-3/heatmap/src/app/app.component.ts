@@ -7,12 +7,20 @@ import { CommonModule } from '@angular/common';
 import { GroupedData } from './interfaces/grouped-data';
 import { DataItem } from './interfaces/data-item';
 import { PlotDataService } from './plot/plot-data';
+import { MatSelectChange, MatSelectModule } from '@angular/material/select';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { BrowserModule } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [HttpClientModule, CommonModule, MatProgressSpinnerModule],
+  imports: [
+    HttpClientModule,
+    CommonModule,
+    MatProgressSpinnerModule,
+    MatSelectModule,
+  ],
   providers: [
     LoadJsonService,
     FilterJsonDataService,
@@ -25,7 +33,7 @@ export class AppComponent {
   data: DataItem[] = [];
   filteredData: GroupedData = {};
   allObjects: string[] = [];
-  selectedObject: string | null = null;
+  selectedObject: string | null = 'person';
   isLoading: boolean = true;
 
   constructor(
@@ -53,13 +61,12 @@ export class AppComponent {
       });
   }
 
-  onObjectSelect(event: Event) {
+  onObjectSelect(event: MatSelectChange) {
     this.isLoading = true;
 
-    const selectElement = event.target as HTMLSelectElement;
-    this.selectedObject = selectElement.value;
+    this.selectedObject = event.value;
     this.plotDataService
-      .plotData(this.filteredData, this.selectedObject)
+      .plotData(this.filteredData, this.selectedObject!)
       .subscribe(() => {
         this.isLoading = false;
       });
