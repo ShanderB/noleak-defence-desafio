@@ -7,11 +7,12 @@ import { CommonModule } from '@angular/common';
 import { GroupedData } from './interfaces/grouped-data';
 import { DataItem } from './interfaces/data-item';
 import { PlotDataService } from './plot/plot-data';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [HttpClientModule, CommonModule],
+  imports: [HttpClientModule, CommonModule, MatProgressSpinnerModule],
   providers: [
     LoadJsonService,
     FilterJsonDataService,
@@ -25,6 +26,7 @@ export class AppComponent {
   filteredData: GroupedData = {};
   allObjects: string[] = [];
   selectedObject: string | null = null;
+  isLoading: boolean = true;
 
   constructor(
     private readonly loadJsonService: LoadJsonService,
@@ -42,14 +44,24 @@ export class AppComponent {
 
         if (this.allObjects.length > 0) {
           this.selectedObject = this.allObjects[0];
-          this.plotDataService.plotData(this.filteredData, this.selectedObject);
+          this.plotDataService
+            .plotData(this.filteredData, this.selectedObject)
+            .subscribe(() => {
+              this.isLoading = false;
+            });
         }
       });
   }
 
   onObjectSelect(event: Event) {
+    this.isLoading = true;
+
     const selectElement = event.target as HTMLSelectElement;
     this.selectedObject = selectElement.value;
-    this.plotDataService.plotData(this.filteredData, this.selectedObject);
+    this.plotDataService
+      .plotData(this.filteredData, this.selectedObject)
+      .subscribe(() => {
+        this.isLoading = false;
+      });
   }
 }

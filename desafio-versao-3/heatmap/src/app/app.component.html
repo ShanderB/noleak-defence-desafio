@@ -1,3 +1,6 @@
+<div *ngIf="isLoading" class="overlay">
+  <mat-spinner></mat-spinner>
+</div>
 <span class="flex-box">
   <canvas id="heatmap-container" width="704" height="480"></canvas>
   <select class="mt-1" (change)="onObjectSelect($event)">
