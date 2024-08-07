@@ -5,10 +5,14 @@
   <canvas id="heatmap-container" width="704" height="480"></canvas>
   <mat-form-field appearance="fill" class="mt-1">
     <mat-label>Selecione um objeto</mat-label>
-    <mat-select [(value)]="selectedObject" (selectionChange)="onObjectSelect($event)">
+    <mat-select
+      [(value)]="selectedObject"
+      (selectionChange)="onObjectSelect($event)"
+    >
       <mat-option *ngFor="let object of allObjects" [value]="object">
         {{ object }}
       </mat-option>
     </mat-select>
   </mat-form-field>
+  <button class="download-button" (click)="downloadCanvas()">Download da Imagem</button>
 </span>

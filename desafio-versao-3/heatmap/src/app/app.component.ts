@@ -71,4 +71,31 @@ export class AppComponent {
         this.isLoading = false;
       });
   }
+
+  downloadCanvas() {
+    const canvas = document.getElementById(
+      'heatmap-container'
+    ) as HTMLCanvasElement;
+    const context = canvas.getContext('2d');
+    const image = new Image();
+    image.src = '../assets/image-overlay.png';
+
+    image.onload = () => {
+      const plotDataUrl = canvas.toDataURL();
+
+      context!.drawImage(image, 0, 0, canvas.width, canvas.height);
+
+      const plotImage = new Image();
+      plotImage.src = plotDataUrl;
+
+      plotImage.onload = () => {
+        context!.drawImage(plotImage, 0, 0, canvas.width, canvas.height);
+
+        const link = document.createElement('a');
+        link.href = canvas.toDataURL('image/png');
+        link.download = 'canvas-image.png';
+        link.click();
+      };
+    };
+  }
 }
