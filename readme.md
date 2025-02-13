@@ -20,3 +20,9 @@ Para executar o ``desafio-versao-1`` e ``desafio-versao-2``, você deve rodar o 
 ### Utilização
 * Ao iniciar, será selecionado o plot ``person`` como padrão. Mude conforme queira;<br>
 * Caso queira fazer o download, clique no botão ``Download da Imagem``.
+
+
+https://www.patrick-wied.at/projects/heatmap-keyboard/
+https://www.patrick-wied.at/static/heatmapjs/
+
+Usar para ajustar um dia.
